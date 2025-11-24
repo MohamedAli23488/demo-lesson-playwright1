@@ -2,6 +2,8 @@ import { test, expect } from '@playwright/test'
 import { LoginPage } from '../pages/login-page'
 import { faker } from '@faker-js/faker/locale/en'
 import { PASSWORD, USERNAME } from '../../config/env-data'
+import { OrderNotFoundPage } from '../pages/order-not-found-page'
+import { OrderFound } from '../pages/order-found'
 
 test('signIn button disabled when incorrect data inserted', async ({ page }) => {
   const authPage = new LoginPage(page)
@@ -9,6 +11,7 @@ test('signIn button disabled when incorrect data inserted', async ({ page }) => 
   await authPage.usernameField.fill(faker.lorem.word(2))
   await authPage.passwordField.fill(faker.lorem.word(7))
   await expect(authPage.signInButton).toBeDisabled()
+  await authPage.verifyPolicyLinksInTheFooter()
 })
 
 test.describe('Login and verify elements on the “Order Creation” page', async () => {
@@ -18,11 +21,12 @@ test.describe('Login and verify elements on the “Order Creation” page', asyn
     const authPage = new LoginPage(page)
     await authPage.open()
     const orderCreationPage = await authPage.signIn(USERNAME, PASSWORD)
+    await orderCreationPage.verifyLanguageSelector()
     await expect(orderCreationPage.statusButton).toBeVisible()
     await expect(orderCreationPage.orderButton).toBeVisible()
     await expect(orderCreationPage.logoutButton).toBeVisible()
-    await expect(orderCreationPage.englishLanguageButton).toBeVisible()
-    await expect(orderCreationPage.russianLanguageButton).toBeVisible()
+    // await expect(orderCreationPage.englishLanguageButton).toBeVisible()
+    // await expect(orderCreationPage.russianLanguageButton).toBeVisible()
   })
 
   test('login with correct credentials and verify order FIELDS in the creation page', async ({
@@ -43,9 +47,7 @@ test.describe('Login and verify elements on the “Order Creation” page', asyn
     await authPage.open()
     const orderCreationPage = await authPage.signIn(USERNAME, PASSWORD)
     await expect(orderCreationPage.homePage).toBeVisible()
-    await expect(orderCreationPage.privacyPolicyPage).toBeVisible()
-    await expect(orderCreationPage.cookiePolicyPage).toBeVisible()
-    await expect(orderCreationPage.termsOfServices).toBeVisible()
+    await orderCreationPage.verifyPolicyLinksInTheFooter()
   })
 
   test('login with correct credentials and verify order TEXTS in the creation page', async ({
@@ -133,10 +135,39 @@ test.describe('Login and verify validation errors during order creation', async 
 test('login with correct credentials and Logout ', async ({ page }) => {
   const authPage = new LoginPage(page)
   await authPage.open()
-  await authPage.open()
   const orderCreationPage = await authPage.signIn(USERNAME, PASSWORD)
   await orderCreationPage.logoutButton.click()
   await expect(authPage.signInButton).toBeVisible()
   await expect(authPage.usernameField).toBeVisible()
   await expect(authPage.passwordField).toBeVisible()
+})
+
+test('Verify language toggle is visible', async ({ page }) => {
+  const authPage = new LoginPage(page)
+  await authPage.open()
+  await authPage.verifyLanguageSelector()
+})
+
+test('Verify order not found page', async ({ page }) => {
+  const authPage = new LoginPage(page)
+  await authPage.open()
+  const orderCreationPage = await authPage.signIn(USERNAME, PASSWORD)
+  await orderCreationPage.statusButton.click()
+  await orderCreationPage.searchOrderInput.fill('9999999')
+  await orderCreationPage.searchOrderSubmitButton.click()
+  const orderNotFound = new OrderNotFoundPage(page)
+  await expect(orderNotFound.orderNotFoundTitle).toBeVisible()
+  await orderNotFound.verifyPolicyLinksInTheFooter()
+})
+
+test('Verify order found page', async ({ page }) => {
+  const authPage = new LoginPage(page)
+  await authPage.open()
+  const orderCreationPage = await authPage.signIn(USERNAME, PASSWORD)
+  await orderCreationPage.statusButton.click()
+  await orderCreationPage.searchOrderInput.fill('13495')
+  await orderCreationPage.searchOrderSubmitButton.click()
+  const orderFound = new OrderFound(page)
+  await expect(orderFound.statuslistItem).toBeVisible()
+  await orderFound.verifyPolicyLinksInTheFooter()
 })
