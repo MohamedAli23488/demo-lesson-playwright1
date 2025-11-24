@@ -2,7 +2,7 @@ import type { Locator, Page } from '@playwright/test'
 import { faker } from '@faker-js/faker/locale/ar'
 import { BasePage } from './base-page'
 
-export class OrderPage extends BasePage{
+export class OrderPage extends BasePage {
   // readonly page: Page
   // buttons
   readonly statusButton: Locator
