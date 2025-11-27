@@ -1,14 +1,15 @@
 import type { Locator, Page } from '@playwright/test'
 import { faker } from '@faker-js/faker/locale/ar'
+import { BasePage } from './base-page'
 
-export class OrderPage {
-  readonly page: Page
+export class OrderPage extends BasePage {
+  // readonly page: Page
   // buttons
   readonly statusButton: Locator
   readonly orderButton: Locator
   readonly logoutButton: Locator
-  readonly englishLanguageButton: Locator
-  readonly russianLanguageButton: Locator
+  // readonly englishLanguageButton: Locator
+  // readonly russianLanguageButton: Locator
   // Fields
   readonly usernameField: Locator
   readonly phoneField: Locator
@@ -16,8 +17,8 @@ export class OrderPage {
   // Links
   readonly homePage: Locator
   readonly privacyPolicyPage: Locator
-  readonly cookiePolicyPage: Locator
-  readonly termsOfServices: Locator
+  // readonly cookiePolicyPage: Locator
+  // readonly termsOfServices: Locator
   // // Texts
   readonly titleTextField: Locator
   readonly highlightedTextTitleField: Locator
@@ -32,9 +33,12 @@ export class OrderPage {
   readonly notificationPopupCloseButton: Locator
   readonly notificationPopupText: Locator
   readonly notificationPopupOkButton: Locator
+  readonly searchOrderInput: Locator
+  readonly searchOrderSubmitButton: Locator
 
   constructor(page: Page) {
-    this.page = page
+    // this.page = page
+    super(page)
     this.statusButton = page.getByTestId('openStatusPopup-button')
     this.usernameField = page.getByTestId('username-input')
     this.phoneField = page.getByTestId('phone-input')
@@ -42,11 +46,11 @@ export class OrderPage {
     this.orderButton = page.getByTestId('createOrder-button')
     this.logoutButton = page.getByTestId('logout-button')
     this.homePage = page.getByTestId('mainPage-link')
-    this.englishLanguageButton = page.getByRole('button', { name: 'EN' })
-    this.russianLanguageButton = page.getByRole('button', { name: 'RU' })
+    // this.englishLanguageButton = page.getByRole('button', { name: 'EN' })
+    // this.russianLanguageButton = page.getByRole('button', { name: 'RU' })
     this.privacyPolicyPage = page.getByTestId('privacy-policy')
-    this.cookiePolicyPage = page.getByTestId('cookie-policy')
-    this.termsOfServices = page.getByTestId('terms-of-service')
+    // this.cookiePolicyPage = page.getByTestId('cookie-policy')
+    // this.termsOfServices = page.getByTestId('terms-of-service')
     this.titleTextField = page.getByText('Tallinn')
     this.highlightedTextTitleField = page.getByText(' Delivery')
     this.createOrderTextTitleField = page.getByText(' Create order')
@@ -54,6 +58,8 @@ export class OrderPage {
     this.blankField = page.getByText(' The field must be filled in.')
     this.usernameError = page.getByTestId('username-input-error')
     this.phoneError = page.getByTestId('phone-input-error')
+    this.searchOrderInput = page.getByTestId('searchOrder-input')
+    this.searchOrderSubmitButton = page.getByTestId('searchOrder-submitButton')
     this.notificationPopupModule = page.getByTestId('orderSuccessfullyCreated-popup')
     this.notificationPopupCloseButton = page.getByTestId(
       'orderSuccessfullyCreated-popup-close-button',

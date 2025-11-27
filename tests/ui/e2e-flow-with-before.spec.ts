@@ -26,8 +26,9 @@ test.describe('Login and verify elements on the “Order Creation” page', asyn
     await expect(orderCreationPage.statusButton).toBeVisible()
     await expect(orderCreationPage.orderButton).toBeVisible()
     await expect(orderCreationPage.logoutButton).toBeVisible()
-    await expect(orderCreationPage.englishLanguageButton).toBeVisible()
-    await expect(orderCreationPage.russianLanguageButton).toBeVisible()
+    await orderCreationPage.verifyLanguageSelector()
+    // await expect(orderCreationPage.englishLanguageButton).toBeVisible()
+    // await expect(orderCreationPage.russianLanguageButton).toBeVisible()
   })
 
   test('login with correct credentials and verify order FIELDS in the creation page', async ({}) => {
