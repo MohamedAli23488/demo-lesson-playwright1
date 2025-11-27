@@ -4,6 +4,8 @@ import { expect, test } from '@playwright/test'
 export abstract class BasePage {
   readonly page: Page
   readonly languageSwitcher: Locator
+  readonly englishButton: Locator
+  readonly russianButton: Locator
   //
   readonly privacyPolicyLink: Locator
   readonly cookiePolicyPage: Locator
@@ -17,6 +19,8 @@ export abstract class BasePage {
     this.privacyPolicyLink = page.getByTestId('privacy-policy')
     this.cookiePolicyPage = page.getByTestId('cookie-policy')
     this.termsOfServices = page.getByTestId('terms-of-service')
+    this.englishButton = page.locator('.language__button', { hasText: 'EN' })
+    this.russianButton = page.locator('.language__button', { hasText: 'RU' })
   }
 
   async checkElementVisibility(element: Locator): Promise<void> {
@@ -29,6 +33,8 @@ export abstract class BasePage {
   async verifyLanguageSelector(): Promise<void> {
     await test.step('Verify language selector', async () => {
       await this.checkElementVisibility(this.languageSwitcher)
+      await this.checkElementVisibility(this.englishButton)
+      await this.checkElementVisibility(this.russianButton)
     })
   }
 
